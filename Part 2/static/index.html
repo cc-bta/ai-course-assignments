@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Math Operations</h1>
+    <label for="equation">Enter an equation:</label>
+    <input type="text" id="equation" placeholder="e.g. x^2">
+    <br>
+    <button onclick="integrate()">Integrate</button>
+    <button onclick="differentiate()">Differentiate</button>
+    <div id="result"></div>
+
+    <script>
+        async function integrate() {
+            const equation = document.getElementById('equation').value;
+            const response = await fetch('/integrate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ equation: equation })
+            });
+            const result = await response.json();
+            document.getElementById('result').innerHTML = `Integral of ${result.equation} from ${result.limits}: ${result.integral}`;
+        }
+
+        async function differentiate() {
+            const equation = document.getElementById('equation').value;
+            const response = await fetch('/differentiate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ equation: equation })
+            });
+            const result = await response.json();
+            document.getElementById('result').innerHTML = `Derivative of ${result.equation}: ${result.derivative}`;
+        }
+    </script>
+</body>
+</html>
