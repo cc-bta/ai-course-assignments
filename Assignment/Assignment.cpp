@@ -47,6 +47,16 @@ std::vector<std::string> infixToPostfix(const std::vector<std::string>& tokens) 
     if (isdigit(token[0])) {
       output.push_back(token);
     }
+    else if (token == "(") {
+      operators.push('(');
+    }
+    else if (token == ")") {
+      while (!operators.empty() && operators.top() != '(') {
+        output.push_back(std::string(1, operators.top()));
+        operators.pop();
+      }
+      operators.pop(); // Pop the '('
+    }
     else if (isOperator(token[0])) {
       while (!operators.empty() && precedence(operators.top()) >= precedence(token[0])) {
         output.push_back(std::string(1, operators.top()));
@@ -86,9 +96,9 @@ int main() {
   std::cout << "Enter an expression to evaluate: ";
   std::getline(std::cin, expression);
 
-  // Insert spaces around operators for tokenization
+  // Insert spaces around operators and parentheses for tokenization
   for (size_t i = 0; i < expression.length(); ++i) {
-    if (isOperator(expression[i])) {
+    if (isOperator(expression[i]) || expression[i] == '(' || expression[i] == ')') {
       expression.insert(i, " ");
       expression.insert(i + 2, " ");
       i += 2;
